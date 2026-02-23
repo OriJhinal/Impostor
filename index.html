@@ -424,31 +424,36 @@ function newRound(){
 
     if(!isHost) return;
 
-    db.ref("lobbies/"+lobbyId+"/players").once("value", snap=>{
+    db.ref("lobbies/"+lobbyId).once("value", lobbySnap => {
 
-        let playersObj = snap.val();
+        if(!lobbySnap.exists()) return;
 
-        if(!playersObj){
-            alert("Brak graczy!");
-            return;
-        }
+        let lobbyData = lobbySnap.val();
+        let mode = lobbyData.mode || "classic";
 
-        let players = Object.keys(playersObj);
+        db.ref("lobbies/"+lobbyId+"/players").once("value", snap => {
 
-        console.log("Players:", players);
+            let playersObj = snap.val();
+            if(!playersObj) return;
 
-        if(players.length < 2){
-            alert("Potrzeba minimum 2 graczy!");
-            return;
-        }
+            let players = Object.keys(playersObj);
 
-        let impostor = players[Math.floor(Math.random()*players.length)];
-        let selected = words[Math.floor(Math.random()*words.length)];
+            if(players.length < 2){
+                alert("Potrzeba minimum 2 graczy!");
+                return;
+            }
 
-        db.ref("lobbies/"+lobbyId).update({
-            state: "game",
-            word: selected.word,
-            impostor: impostor
+            let impostor = players[Math.floor(Math.random()*players.length)];
+            let selected = words[Math.floor(Math.random()*words.length)];
+
+            db.ref("lobbies/"+lobbyId).update({
+                state: "game",
+                word: selected.word,
+                hint: mode === "hint" ? selected.hint : "",
+                impostor: impostor,
+                mode: mode
+            });
+
         });
     });
 }
