@@ -84,8 +84,10 @@ input {
 }
 
 .reveal-card {
-    margin-top: 25px;
-    padding: 28px;
+    margin: 10px auto 40px auto; /* większy odstęp od przycisku */
+    padding: 22px;
+    width: 85%; /* lekko mniejsze okienko */
+    max-width: 280px;
     border-radius: 20px;
     background: linear-gradient(145deg, #1c2130, #141822);
     box-shadow:
@@ -249,7 +251,12 @@ input {
 .modal-buttons {
     margin-top: 18px;
     display: flex;
-    justify-content: space-between;
+    gap: 12px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    margin-top: 0;
 }
 
 .modal.hidden {
@@ -355,6 +362,7 @@ let playerName = "";
 let lobbyId = "";
 let isHost = false;
 let gameMode = "classic";
+let isLeaving = false;
 
 // Słowa testowe
 const words = [
@@ -1134,6 +1142,13 @@ function enterLobby(){
 
     const hostId = snap.ref.parent.parent.child("host");
 
+    db.ref("lobbies/"+lobbyId+"/players/"+playerId).on("value", snap=>{
+    if(!snap.exists() && !isLeaving){
+        alert("Zostałeś wyrzucony z lobby.");
+        location.reload();
+    }
+});
+
     snap.forEach(p=>{
     const data = p.val();
     const id = p.key;
@@ -1166,12 +1181,7 @@ function enterLobby(){
 
     container.appendChild(card);
 
-    db.ref("lobbies/"+lobbyId+"/players/"+playerId).on("value", snap=>{
-    if(!snap.exists()){
-        alert("Zostałeś wyrzucony z lobby.");
-        location.reload();
-    }
-});
+
 });
 
     // oznacz hosta
@@ -1186,12 +1196,16 @@ function enterLobby(){
     });
 });
 
- db.ref("lobbies/"+lobbyId).on("value", snap=>{
+db.ref("lobbies/"+lobbyId).on("value", snap=>{
     let data = snap.val();
     if(!data) return;
 
     if(data.state === "game"){
         startGameView(data);
+    }
+
+    if(data.state === "lobby"){
+        show("lobby");
     }
 });
 
@@ -1293,10 +1307,15 @@ function startGameView(data){
 
 // LEAVE
 function leaveGame(){
+    isLeaving = true;
+
     if(lobbyId){
-        db.ref("lobbies/"+lobbyId+"/players/"+playerId).remove();
+        db.ref("lobbies/"+lobbyId+"/players/"+playerId).remove().then(()=>{
+            location.reload();
+        });
+    } else {
+        location.reload();
     }
-    location.reload();
 }
 
 function confirmKick(id, name){
