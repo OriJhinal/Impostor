@@ -8,21 +8,29 @@
 <style>
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0f1117;
-    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+
+    background: radial-gradient(circle at 30% 20%, rgba(92,124,250,0.25), transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(46,204,113,0.2), transparent 50%),
+                linear-gradient(160deg, #0f111a, #121629 60%, #0c0f17);
+
+    color: white;
 }
 .container {
+    position: relative;
     width: 360px;
-    background: #1a1d27;
-    padding: 25px;
-    border-radius: 14px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    background: linear-gradient(145deg, #1f2433, #161a25);
+    padding: 28px;
+    border-radius: 18px;
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.05);
     text-align: center;
+    transition: 0.3s ease;
 }
 h1 {
     margin-top: 0;
@@ -30,13 +38,24 @@ h1 {
 button {
     width: 100%;
     padding: 12px;
-    margin-top: 10px;
+    margin-top: 12px;
     border: none;
-    border-radius: 8px;
-    background: #4c6ef5;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #5c7cfa, #4263eb);
     color: white;
     font-size: 16px;
     cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+    transition: 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+}
+
+button:active {
+    transform: translateY(1px);
 }
 button:hover {
     background: #3b5bdb;
@@ -44,41 +63,167 @@ button:hover {
 input {
     width: 100%;
     padding: 10px;
-    margin-top: 10px;
-    border-radius: 6px;
-    border: none;
-    background: #2a2f3d;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #2f3545;
+    background: #222633;
     color: white;
+    box-sizing: border-box;
+    text-align: center;
 }
 .player-list {
-    text-align: left;
-    margin-top: 15px;
-    background: #11131a;
-    padding: 10px;
-    border-radius: 8px;
-    max-height: 150px;
-    overflow-y: auto;
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 .code {
     font-size: 28px;
     letter-spacing: 4px;
     margin: 10px 0;
 }
-.word {
-    font-size: 28px;
-    margin-top: 20px;
+
+.reveal-card {
+    margin-top: 25px;
+    padding: 28px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, #1c2130, #141822);
+    box-shadow:
+        0 15px 35px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+    transform: scale(0.96);
+    opacity: 0;
+    transition: all 0.28s ease;
 }
-.impostor {
-    color: #ff4d4d;
+
+.reveal-card.show {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.role-label {
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    opacity: 0.7;
+    margin-bottom: 15px;
+}
+
+.word {
+    font-size: 26px;
+    font-weight: 700;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #5c7cfa, #4263eb);
+    display: inline-block;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    letter-spacing: 1px;
+}
+
+/* === IMPOSTOR STYL === */
+
+.reveal-card.impostor {
+    background: linear-gradient(145deg, #2a1515, #1a0f0f);
+    box-shadow:
+        0 15px 35px rgba(0,0,0,0.7),
+        0 0 25px rgba(231,76,60,0.35);
+}
+
+.reveal-card.impostor .word {
+    background: linear-gradient(145deg, #e74c3c, #c0392b);
+}
+
+.reveal-card.impostor .role-label {
+    color: #ff6b6b;
 }
 .hidden {
     display: none;
+}
+.back {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: auto;
+    padding: 8px 14px;
+    font-size: 14px;
+    background: #2c3142;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.back:hover {
+    background: #3a4055;
+}
+
+.player-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(145deg, #1b2030, #141822);
+    padding: 12px 14px;
+    border-radius: 16px;
+    box-shadow:
+        0 8px 18px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: 0.25s ease;
+    animation: fadeIn 0.3s ease;
+}
+
+.player-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 12px 22px rgba(0,0,0,0.6),
+        0 0 10px rgba(92,124,250,0.25);
+}
+
+.player-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #5c7cfa, #4263eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.player-info {
+    text-align: left;
+}
+
+.player-name {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.player-status {
+    font-size: 12px;
+    color: #2ecc71;
+}
+
+.host-badge {
+    font-size: 18px;
+    margin-left: 8px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 </style>
 </head>
 <body>
 
 <div class="container" id="app">
+
+    <button id="backBtn" class="back hidden" onclick="goBack()">← Cofnij</button>
 
     <!-- MENU -->
     <div id="menu">
@@ -117,8 +262,10 @@ input {
 
     <!-- GAME -->
     <div id="game" class="hidden">
-        <h2>Twoja rola</h2>
-        <div class="word" id="word"></div>
+        <div id="revealCard" class="reveal-card">
+    <div id="roleLabel" class="role-label"></div>
+    <div id="word" class="word"></div>
+</div>
 
         <button id="newRoundBtn" onclick="newRound()">Nowa runda</button>
         <button onclick="leaveGame()">Opuść</button>
@@ -155,442 +302,717 @@ let gameMode = "classic";
 
 // Słowa testowe
 const words = [
-/* OSOBY */ {word:"Robert Lewandowski", hint:"Napastnik"}, {word:"Michael Jackson", hint:"Taniec"}, {word:"Albert Einstein", hint:"Geniusz"}, {word:"Elon Musk", hint:"Rakiety"}, {word:"Taylor Swift", hint:"Koncert"}, {word:"Harry Potter", hint:"Magia"}, {word:"Spider-Man", hint:"Pajęczyna"}, {word:"Batman", hint:"Mrok"}, {word:"Sherlock Holmes", hint:"Detektyw"}, {word:"Pikachu", hint:"Elektryczność"}, /* MIEJSCA */ {word:"Nowy Jork", hint:"Drapacze"}, {word:"Paryż", hint:"Romantycznie"}, {word:"Bałtyk", hint:"Polska"}, {word:"Tatry", hint:"Wspinaczka"}, {word:"Sahara", hint:"Upał"}, {word:"Amazonia", hint:"Dżungla"}, {word:"Tokio", hint:"Neony"}, {word:"Londyn", hint:"Deszcz"}, {word:"Rzym", hint:"Historia"}, {word:"Las Vegas", hint:"Kasyno"}, /* FILMY I SERIALE */ {word:"Gra o Tron", hint:"Władza"}, {word:"Władca Pierścieni", hint:"Podróż"}, {word:"Star Wars", hint:"Kosmos"}, {word:"Matrix", hint:"Symulacja"}, {word:"Titanic", hint:"Katastrofa"}, {word:"Avatar", hint:"Natura"}, {word:"Jurassic Park", hint:"Dinozaury"}, {word:"Stranger Things", hint:"Tajemnica"}, {word:"Breaking Bad", hint:"Chemia"}, {word:"The Office", hint:"Biuro"}, /* PRZEDMIOTY */ {word:"Smartfon", hint:"Powiadomienia"}, {word:"Laptop", hint:"Praca"}, {word:"Kamera", hint:"Nagranie"}, {word:"Zegarek", hint:"Czas"}, {word:"Plecak", hint:"Podróż"}, {word:"Walizka", hint:"Lotnisko"}, {word:"Latarka", hint:"Ciemność"}, {word:"Parasol", hint:"Pogoda"}, {word:"Okulary", hint:"Wzrok"}, {word:"Słuchawki", hint:"Muzyka"}, /* JEDZENIE */ {word:"Pizza", hint:"Dostawa"}, {word:"Sushi", hint:"Japonia"}, {word:"Burger", hint:"Fast food"}, {word:"Lody", hint:"Lato"}, {word:"Czekolada", hint:"Słodkie"}, {word:"Kawa", hint:"Pobudka"}, {word:"Herbata", hint:"Spokój"}, {word:"Popcorn", hint:"Kino"}, {word:"Makaron", hint:"Włochy"}, {word:"Tort", hint:"Urodziny"}, /* ZWIERZĘTA */ {word:"Lew", hint:"Król"}, {word:"Tygrys", hint:"Dżungla"}, {word:"Delfin", hint:"Inteligencja"}, {word:"Rekin", hint:"Strach"}, {word:"Orzeł", hint:"Wysoko"}, {word:"Pingwin", hint:"Lód"}, {word:"Koń", hint:"Galop"}, {word:"Panda", hint:"Bambus"}, {word:"Wilk", hint:"Stado"}, {word:"Niedźwiedź", hint:"Sen zimowy"}, /* SPORT */ {word:"Piłka nożna", hint:"Gol"}, {word:"Koszykówka", hint:"Rzut"}, {word:"Siatkówka", hint:"Drużyna"}, {word:"Tenis", hint:"Kort"}, {word:"Formuła 1", hint:"Prędkość"}, {word:"Boks", hint:"Runda"}, {word:"Maraton", hint:"Wytrzymałość"}, {word:"Narciarstwo", hint:"Zima"}, {word:"Surfing", hint:"Fale"}, {word:"Szachy", hint:"Strategia"}, /* EMOCJE I POJĘCIA */ {word:"Miłość", hint:"Relacja"}, {word:"Strach", hint:"Napięcie"}, {word:"Sukces", hint:"Osiągnięcie"}, {word:"Porażka", hint:"Lekcja"}, {word:"Marzenie", hint:"Cel"}, {word:"Tajemnica", hint:"Ukryte"}, {word:"Chaos", hint:"Bałagan"}, {word:"Spokój", hint:"Cisza"}, {word:"Przygoda", hint:"Podróż"}, {word:"Ryzyko", hint:"Decyzja"}, /* OSOBY */
-{word:"Cristiano Ronaldo", hint:"Rekordy"},
-{word:"Lionel Messi", hint:"Drybling"},
-{word:"Iga Świątek", hint:"Kort ziemny"},
-{word:"Andrzej Sapkowski", hint:"Wiedźmin"},
-{word:"Stephen King", hint:"Groza"},
-{word:"J.K. Rowling", hint:"Szkoła magii"},
-{word:"Leonardo da Vinci", hint:"Renesans"},
-{word:"Frida Kahlo", hint:"Autoportret"},
-{word:"Walt Disney", hint:"Animacja"},
-{word:"Freddie Mercury", hint:"Scena"},
-{word:"Bruce Lee", hint:"Sztuki walki"},
-{word:"Arnold Schwarzenegger", hint:"Kulturystyka"},
-{word:"Tom Hanks", hint:"Hollywood"},
-{word:"Keanu Reeves", hint:"Matrix aktor"},
-{word:"Emma Watson", hint:"Hermiona"},
-{word:"Scarlett Johansson", hint:"Marvel"},
-{word:"Ryan Reynolds", hint:"Deadpool"},
-{word:"Robert Downey Jr.", hint:"Iron Man"},
-{word:"Chris Hemsworth", hint:"Thor"},
-{word:"Dwayne Johnson", hint:"The Rock"},
+/* OSOBY */
+{word:"Robert Lewandowski", hint:"Polska"}, 
+{word:"Michael Jackson", hint:"Rękawiczka"}, 
+{word:"Albert Einstein", hint:"Język"}, 
+{word:"Elon Musk", hint:"Neuralink"}, 
+{word:"Taylor Swift", hint:"Kot"}, 
+{word:"Harry Potter", hint:"Sowa"}, 
+{word:"Spider-Man", hint:"Ciotka"}, 
+{word:"Batman", hint:"Robina"}, 
+{word:"Sherlock Holmes", hint:"Fidżet"}, 
+{word:"Pikachu", hint:"TeamRocket"}, 
 
 /* MIEJSCA */
-{word:"Sydney", hint:"Opera"},
-{word:"Dubaj", hint:"Wieżowce"},
-{word:"Los Angeles", hint:"Filmy"},
-{word:"San Francisco", hint:"Most"},
-{word:"Chicago", hint:"Wiatr"},
-{word:"Berlin", hint:"Mur"},
-{word:"Praga", hint:"Most Karola"},
-{word:"Wenecja", hint:"Kanały"},
-{word:"Barcelona", hint:"Gaudi"},
-{word:"Madryt", hint:"Hiszpania stolica"},
-{word:"Hawaje", hint:"Wulkany"},
-{word:"Islandia", hint:"Gejzery"},
-{word:"Alpy", hint:"Narty"},
-{word:"Mount Everest", hint:"Szczyt"},
-{word:"Niagara", hint:"Wodospad"},
-{word:"Wielki Kanion", hint:"Przepaść"},
-{word:"Antarktyda", hint:"Ekspedycja"},
-{word:"Grenlandia", hint:"Lód"},
-{word:"Malediwy", hint:"Rafa"},
-{word:"Bali", hint:"Relaks"},
+{word:"Nowy Jork", hint:"Statua"}, 
+{word:"Paryż", hint:"Kawiarnia"}, 
+{word:"Bałtyk", hint:"Bursztyn"}, 
+{word:"Tatry", hint:"Ornak"}, 
+{word:"Sahara", hint:"Beduin"}, 
+{word:"Amazonia", hint:"Anakonda"}, 
+{word:"Tokio", hint:"Sumo"}, 
+{word:"Londyn", hint:"Autobus"}, 
+{word:"Rzym", hint:"Gelato"}, 
+{word:"Las Vegas", hint:"Showgirl"}, 
 
 /* FILMY I SERIALE */
-{word:"Avengers", hint:"Superbohaterowie razem"},
-{word:"Iron Man", hint:"Zbroja"},
-{word:"Thor", hint:"Młot"},
-{word:"Hulk", hint:"Siła"},
-{word:"Deadpool", hint:"Humor"},
-{word:"Joker", hint:"Chaos"},
-{word:"Incepcja", hint:"Sny"},
-{word:"Interstellar", hint:"Czasoprzestrzeń"},
-{word:"Gladiator", hint:"Arena"},
-{word:"Piraci z Karaibów", hint:"Morze"},
-{word:"Szybcy i wściekli", hint:"Wyścigi"},
-{word:"John Wick", hint:"Zemsta"},
-{word:"The Crown", hint:"Rodzina królewska"},
-{word:"Narcos", hint:"Kartel"},
-{word:"Dark", hint:"Pętle czasowe"},
-{word:"The Witcher", hint:"Potwory"},
-{word:"Wednesday", hint:"Gotyk"},
-{word:"Peaky Blinders", hint:"Gang"},
-{word:"House of the Dragon", hint:"Smoki"},
-{word:"Black Mirror", hint:"Technologia"},
+{word:"Gra o Tron", hint:"Zima"}, 
+{word:"Władca Pierścieni", hint:"Hobbit"}, 
+{word:"Star Wars", hint:"Yoda"}, 
+{word:"Matrix", hint:"Oráculo"}, 
+{word:"Titanic", hint:"Serce"}, 
+{word:"Avatar", hint:"Unobtanium"}, 
+{word:"Jurassic Park", hint:"Mosazny"}, 
+{word:"Stranger Things", hint:"Rowery"}, 
+{word:"Breaking Bad", hint:"Kamizelka"}, 
+{word:"The Office", hint:"Burr"}, 
 
 /* PRZEDMIOTY */
-{word:"Powerbank", hint:"Energia w podróży"},
-{word:"Tablet", hint:"Dotykowy ekran"},
-{word:"Drukarka", hint:"Papier"},
-{word:"Klawiatura", hint:"Pisanie"},
-{word:"Myszka", hint:"Kursor"},
-{word:"Monitor", hint:"Wyświetlanie"},
-{word:"Router", hint:"Internet domowy"},
-{word:"Pilot", hint:"Kanały"},
-{word:"Głośnik", hint:"Dźwięk"},
-{word:"Mikrofon", hint:"Nagrywanie"},
-{word:"Statyw", hint:"Stabilność"},
-{word:"Termos", hint:"Ciepło długo"},
-{word:"Bidon", hint:"Sport"},
-{word:"Scyzoryk", hint:"Wielofunkcyjny"},
-{word:"Kompas", hint:"Kierunek"},
-{word:"Mapa", hint:"Orientacja"},
-{word:"Notes", hint:"Zapisy"},
-{word:"Długopis", hint:"Atrament"},
-{word:"Kalkulator", hint:"Obliczenia"},
-{word:"Latte art", hint:"Kawiarnia"},
+{word:"Smartfon", hint:"Pęknięcie"}, 
+{word:"Laptop", hint:"Wentylator"},
+{word:"Kamera", hint:"Selfie"}, 
+{word:"Zegarek", hint:"Bateria"}, 
+{word:"Plecak", hint:"Zamek"}, 
+{word:"Walizka", hint:"Etykieta"}, 
+{word:"Latarka", hint:"Światło"}, 
+{word:"Parasol", hint:"Wiatr"}, 
+{word:"Okulary", hint:"Śruby"}, 
+{word:"Słuchawki", hint:"Przewód"}, 
 
 /* JEDZENIE */
-{word:"Tacos", hint:"Meksyk"},
-{word:"Burrito", hint:"Zawinięte"},
-{word:"Ramen", hint:"Bulion"},
-{word:"Pad Thai", hint:"Tajlandia"},
-{word:"Pierogi", hint:"Polska kuchnia"},
-{word:"Gołąbki", hint:"Kapusta"},
-{word:"Schabowy", hint:"Panierka"},
-{word:"Żurek", hint:"Kwaśny"},
-{word:"Barszcz", hint:"Buraki"},
-{word:"Kebab", hint:"Nocne jedzenie"},
-{word:"Falafel", hint:"Ciecierzyca"},
-{word:"Hummus", hint:"Pasta"},
-{word:"Guacamole", hint:"Awokado"},
-{word:"Nachosy", hint:"Sos serowy"},
-{word:"Croissant", hint:"Francja"},
-{word:"Bagietka", hint:"Długa bułka"},
-{word:"Pączki", hint:"Tłusty czwartek"},
-{word:"Muffin", hint:"Papierowa foremka"},
-{word:"Smoothie", hint:"Blendowane"},
-{word:"Milkshake", hint:"Gęsty napój"},
+{word:"Pizza", hint:"Ser"}, 
+{word:"Sushi", hint:"Ryż"}, 
+{word:"Burger", hint:"Frytki"}, 
+{word:"Lody", hint:"Łyżeczka"}, 
+{word:"Czekolada", hint:"Rozpuszczenie"}, 
+{word:"Kawa", hint:"Piana"}, 
+{word:"Herbata", hint:"Czajniczek"}, 
+{word:"Popcorn", hint:"Kino"}, 
+{word:"Makaron", hint:"Sos"}, 
+{word:"Tort", hint:"Świeczki"}, 
 
 /* ZWIERZĘTA */
-{word:"Słoń", hint:"Pamięć"},
-{word:"Żyrafa", hint:"Długa szyja"},
-{word:"Kangur", hint:"Torba"},
-{word:"Koala", hint:"Eukaliptus"},
-{word:"Hipopotam", hint:"Rzeka"},
-{word:"Nosorożec", hint:"Róg"},
-{word:"Gepard", hint:"Najszybszy"},
-{word:"Pantera", hint:"Cichy łowca"},
-{word:"Lis", hint:"Spryt"},
-{word:"Sowa", hint:"Noc"},
-{word:"Jastrząb", hint:"Polowanie z powietrza"},
-{word:"Kruk", hint:"Czarny ptak"},
-{word:"Flaming", hint:"Różowy"},
-{word:"Aligator", hint:"Bagna"},
-{word:"Kameleon", hint:"Zmiana koloru"},
-{word:"Ośmiornica", hint:"Ramiona"},
-{word:"Meduza", hint:"Parzy"},
-{word:"Konik morski", hint:"Ocean"},
-{word:"Foka", hint:"Wybrzeże"},
-{word:"Mors", hint:"Kły"},
+{word:"Lew", hint:"Grzywa"}, 
+{word:"Tygrys", hint:"Skok"}, 
+{word:"Delfin", hint:"Skok"}, 
+{word:"Rekin", hint:"Zęby"}, 
+{word:"Orzeł", hint:"Gniazdo"}, 
+{word:"Pingwin", hint:"Marzec"}, 
+{word:"Koń", hint:"Grzywa"}, 
+{word:"Panda", hint:"Lenistwo"}, 
+{word:"Wilk", hint:"Wyć"}, 
+{word:"Niedźwiedź", hint:"Miód"}, 
 
 /* SPORT */
-{word:"Triathlon", hint:"Trzy dyscypliny"},
-{word:"Crossfit", hint:"Obwody"},
-{word:"Kalistenika", hint:"Masa ciała"},
-{word:"Podnoszenie ciężarów", hint:"Sztanga"},
-{word:"Judo", hint:"Rzut"},
-{word:"Karate", hint:"Pas"},
-{word:"Taekwondo", hint:"Kopnięcia"},
-{word:"Wspinaczka", hint:"Chwyty"},
-{word:"Bouldering", hint:"Nisko bez liny"},
-{word:"Hokej", hint:"Lód"},
-{word:"Łyżwiarstwo", hint:"Ślizg"},
-{word:"Snowboard", hint:"Deska zimą"},
-{word:"Skateboarding", hint:"Triki"},
-{word:"Parkour", hint:"Miasto"},
-{word:"Strzelectwo", hint:"Celność"},
-{word:"Golf", hint:"Dołki"},
-{word:"Baseball", hint:"Kij"},
-{word:"Rugby", hint:"Owalna piłka"},
-{word:"Badminton", hint:"Lotka"},
-{word:"Tenis stołowy", hint:"Ping-pong"},
+{word:"Piłka nożna", hint:"Spalony"}, 
+{word:"Koszykówka", hint:"Zbiórka"}, 
+{word:"Siatkówka", hint:"As"}, 
+{word:"Tenis", hint:"Love"}, 
+{word:"Formuła 1", hint:"Pitstop"}, 
+{word:"Boks", hint:"Worki"}, 
+{word:"Maraton", hint:"Ściana"}, 
+{word:"Narciarstwo", hint:"Orlik"}, 
+{word:"Surfing", hint:"Deska"}, 
+{word:"Szachy", hint:"Wieża"}, 
 
 /* EMOCJE I POJĘCIA */
-{word:"Motywacja", hint:"Działanie"},
-{word:"Determinacja", hint:"Upór"},
-{word:"Cierpliwość", hint:"Czekanie"},
-{word:"Wdzięczność", hint:"Docenianie"},
-{word:"Zazdrość", hint:"Porównania"},
-{word:"Duma", hint:"Satysfakcja"},
-{word:"Wstyd", hint:"Zakłopotanie"},
-{word:"Nostalgia", hint:"Wspomnienia"},
-{word:"Ekscytacja", hint:"Oczekiwanie"},
-{word:"Zaskoczenie", hint:"Niespodzianka"},
-{word:"Rozczarowanie", hint:"Zawód"},
-{word:"Ulga", hint:"Po stresie"},
-{word:"Samotność", hint:"Brak ludzi"},
-{word:"Zaufanie", hint:"Wiara w kogoś"},
-{word:"Odwaga", hint:"Ryzyko działania"},
-{word:"Kreatywność", hint:"Pomysły"},
-{word:"Ambicja", hint:"Wysokie cele"},
-{word:"Koncentracja", hint:"Skupienie"},
-{word:"Równowaga", hint:"Stabilność"},
-{word:"Wyobraźnia", hint:"Tworzenie w głowie"},
-{word:"Napoleon Bonaparte", hint:"Waterloo"},
-{word:"Cleopatra", hint:"Nil"},
-{word:"Mahatma Gandhi", hint:"Pokój"},
-{word:"Martin Luther King Jr.", hint:"Marzenie"},
-{word:"Nikola Tesla", hint:"Cewka"},
-{word:"Pablo Picasso", hint:"Kubizm"},
-{word:"Vincent van Gogh", hint:"Gwiaździsta"},
-{word:"William Shakespeare", hint:"Hamlet"},
-{word:"Charlie Chaplin", hint:"Laska"},
-{word:"Usain Bolt", hint:"Błysk"},
-{word:"Michael Jordan", hint:"Chicago"},
-{word:"Serena Williams", hint:"Rakieta"},
-{word:"Oprah Winfrey", hint:"Wywiad"},
-{word:"Bill Gates", hint:"Windows"},
-{word:"Mark Zuckerberg", hint:"Facebook"},
-{word:"Jeff Bezos", hint:"Amazon"},
-{word:"Adele", hint:"Ballada"},
-{word:"Drake", hint:"Toronto"},
-{word:"Beyoncé", hint:"Destiny"},
-{word:"Ed Sheeran", hint:"Gitara"},
-{word:"Franz Kafka", hint:"Proces"},
-{word:"Homer Simpson", hint:"Donut"},
-{word:"Indiana Jones", hint:"Archeologia"},
-{word:"Lara Croft", hint:"Artefakt"},
-{word:"Walter White", hint:"Metamfetamina"},
-{word:"Tony Stark", hint:"Zbroja"},
-{word:"Darth Vader", hint:"Imperium"},
-{word:"Gandalf", hint:"Czarodziej"},
-{word:"Jon Snow", hint:"Północ"},
-{word:"Geralt z Rivii", hint:"Wiedźmin"},
-{word:"Król Artur", hint:"Excalibur"},
-{word:"Leonardo DiCaprio", hint:"Oscar"},
-{word:"Brad Pitt", hint:"Hollywood"},
-{word:"Angelina Jolie", hint:"Adopcja"},
-{word:"Keira Knightley", hint:"Piraci"},
-{word:"Daniel Radcliffe", hint:"Hogwart"},
-{word:"Emma Stone", hint:"LaLaLand"},
-{word:"Tom Cruise", hint:"Kaskader"},
-{word:"Robert De Niro", hint:"Mafia"},
-{word:"Al Pacino", hint:"Scarface"},
-{word:"Galileo Galilei", hint:"Teleskop"},
-{word:"Isaac Newton", hint:"Grawitacja"},
-{word:"Charles Darwin", hint:"Ewolucja"},
-{word:"Sigmund Freud", hint:"Psychoanaliza"},
-{word:"Wolfgang Amadeus Mozart", hint:"Symfonia"},
-{word:"Ludwig van Beethoven", hint:"Sonata"},
-{word:"Elvis Presley", hint:"Rock"},
-{word:"Madonna", hint:"Pop"},
-{word:"Kurt Cobain", hint:"Grunge"},
-{word:"Bob Marley", hint:"Reggae"},
+{word:"Miłość", hint:"Motyle"}, 
+{word:"Strach", hint:"Dreszcze"}, 
+{word:"Sukces", hint:"Konfetti"}, 
+{word:"Porażka", hint:"Pudło"}, 
+{word:"Marzenie", hint:"Sennik"}, 
+{word:"Tajemnica", hint:"Klucz"}, 
+{word:"Chaos", hint:"Tornado"}, 
+{word:"Spokój", hint:"Chmura"}, 
+{word:"Przygoda", hint:"Plecak"}, 
+{word:"Ryzyko", hint:"Kości"}, 
 
-/* MIEJSCA */
-{word:"Atlantyda", hint:"Mit"},
-{word:"Watykan", hint:"Papież"},
-{word:"Hollywood", hint:"Gwiazdy"},
-{word:"Manhattan", hint:"Skyline"},
-{word:"Transylwania", hint:"Wampir"},
-{word:"Himalaje", hint:"Szczyt"},
-{word:"Amazonka", hint:"Rzeka"},
-{word:"Sycylia", hint:"Mafia"},
-{word:"Alaska", hint:"Dzikość"},
-{word:"Czarnobyl", hint:"Reaktor"},
-{word:"Stonehenge", hint:"Krąg"},
-{word:"Wersal", hint:"Pałac"},
-{word:"Pompeje", hint:"Wulkan"},
-{word:"Giza", hint:"Sfinks"},
-{word:"Everest", hint:"Tlen"},
-{word:"Fukushima", hint:"Katastrofa"},
-{word:"Wall Street", hint:"Giełda"},
-{word:"Kilimandżaro", hint:"Afryka"},
-{word:"Serengeti", hint:"Safari"},
-{word:"Andes", hint:"Kontynent"},
-{word:"Toskania", hint:"Winnice"},
-{word:"Sahara", hint:"Wydmy"},
-{word:"Patagonia", hint:"Bezmiar"},
-{word:"Babilon", hint:"Wiszące"},
-{word:"Sparta", hint:"Wojownicy"},
-{word:"Troja", hint:"Koń"},
-{word:"Korsyka", hint:"Wyspa"},
-{word:"Ibiza", hint:"Impreza"},
-{word:"Himalaje", hint:"Szerpowie"},
-{word:"Malta", hint:"Twierdza"},
-{word:"Wenecja", hint:"Maski"},
-{word:"Chicago", hint:"Gangsterzy"},
-{word:"Nowy Orlean", hint:"Jazz"},
-{word:"Seattle", hint:"Deszcz"},
-{word:"Miami", hint:"Floryda"},
-{word:"Bangkok", hint:"TukTuk"},
-{word:"Delhi", hint:"Indie"},
-{word:"Prypeć", hint:"Ewakuacja"},
-{word:"Monte Carlo", hint:"Kasyno"},
-{word:"Antarktyda", hint:"Pingwiny"},
-{word:"Grenlandia", hint:"Lodowiec"},
-{word:"Sztokholm", hint:"Nobel"},
-{word:"Helsinki", hint:"Sauna"},
-{word:"Oslo", hint:"Fiord"},
-{word:"Reykjavik", hint:"Gejzer"},
-{word:"Marrakesz", hint:"Bazaar"},
-{word:"Dubaj", hint:"Burj"},
-{word:"Sydney", hint:"Opera"},
-{word:"Rio de Janeiro", hint:"Samba"},
+{word:"Cristiano Ronaldo", hint:"Siuuu"}, 
+{word:"Lionel Messi", hint:"Leworęczny"}, 
+{word:"Iga Świątek", hint:"Mentalność"}, 
+{word:"Andrzej Sapkowski", hint:"Monster"}, 
+{word:"Stephen King", hint:"Maine"}, 
+{word:"J.K. Rowling", hint:"Edynburg"}, 
+{word:"Leonardo da Vinci", hint:"Helikopter"}, 
+{word:"Frida Kahlo", hint:"Unibrow"}, 
+{word:"Walt Disney", hint:"Kaczkowski"}, 
+{word:"Freddie Mercury", hint:"Zęby"}, 
+{word:"Bruce Lee", hint:"Woda"}, 
+{word:"Arnold Schwarzenegger", hint:"Hasta"}, 
+{word:"Tom Hanks", hint:"Wilson"}, 
+{word:"Keanu Reeves", hint:"Smutny"}, 
+{word:"Emma Watson", hint:"Brown"}, 
+{word:"Scarlett Johansson", hint:"Lucy"}, 
+{word:"Ryan Reynolds", hint:"Aviation"}, 
+{word:"Robert Downey Jr.", hint:"Sobriety"}, 
+{word:"Chris Hemsworth", hint:"Bracia"}, 
+{word:"Dwayne Johnson", hint:"Tequila"}, 
 
-/* FILMY */
-{word:"Gladiator", hint:"Koloseum"},
-{word:"Incepcja", hint:"Totem"},
-{word:"Interstellar", hint:"CzarnaDziura"},
-{word:"Matrix", hint:"Neo"},
-{word:"Titanic", hint:"GóraLodowa"},
-{word:"Avatar", hint:"Pandora"},
-{word:"Joker", hint:"Anarchia"},
-{word:"Parasite", hint:"Nierówność"},
-{word:"Shrek", hint:"Bagno"},
-{word:"Król Lew", hint:"Simba"},
-{word:"Frozen", hint:"Elsa"},
-{word:"Avengers", hint:"Sojusz"},
-{word:"Batman", hint:"Gotham"},
-{word:"Spider-Man", hint:"Sieć"},
-{word:"Deadpool", hint:"Ironia"},
-{word:"Harry Potter", hint:"Hogwart"},
-{word:"Władca Pierścieni", hint:"Mordor"},
-{word:"Star Wars", hint:"Moc"},
-{word:"Jurassic Park", hint:"Dinozaur"},
-{word:"The Godfather", hint:"Don"},
-{word:"Fight Club", hint:"Underground"},
-{word:"Pulp Fiction", hint:"Walizka"},
-{word:"Forrest Gump", hint:"Ławka"},
-{word:"Top Gun", hint:"Myśliwiec"},
-{word:"La La Land", hint:"Audycja"},
-{word:"Czarna Pantera", hint:"Wakanda"},
-{word:"Thor", hint:"Asgard"},
-{word:"Iron Man", hint:"ArcReactor"},
-{word:"Minionki", hint:"Gru"},
-{word:"Piraci z Karaibów", hint:"Perła"},
-{word:"John Wick", hint:"Zemsta"},
-{word:"Mission Impossible", hint:"Agent"},
-{word:"James Bond", hint:"AstonMartin"},
-{word:"Rocky", hint:"Boks"},
-{word:"Rambo", hint:"Weteran"},
-{word:"Terminator", hint:"Skynet"},
-{word:"Predator", hint:"Łowca"},
-{word:"Obcy", hint:"Xenomorph"},
-{word:"The Social Network", hint:"Startup"},
-{word:"Wilk z Wall Street", hint:"Makler"},
-{word:"Breaking Bad", hint:"Heisenberg"},
-{word:"Dark", hint:"Pętla"},
-{word:"Stranger Things", hint:"UpsideDown"},
-{word:"The Office", hint:"Scranton"},
-{word:"Peaky Blinders", hint:"Birmingham"},
-{word:"Narcos", hint:"Kartel"},
-{word:"The Crown", hint:"Monarchia"},
-{word:"Wednesday", hint:"Gotyk"},
-{word:"House of the Dragon", hint:"Targaryen"},
-{word:"Black Mirror", hint:"Technologia"},
+{word:"Sydney", hint:"Most"}, 
+{word:"Dubaj", hint:"Fontanna"}, 
+{word:"Los Angeles", hint:"Plaża"}, 
+{word:"San Francisco", hint:"Tramwaj"}, 
+{word:"Chicago", hint:"Pizza"}, 
+{word:"Berlin", hint:"Curry"}, 
+{word:"Praga", hint:"Piwo"}, 
+{word:"Wenecja", hint:"Mosty"}, 
+{word:"Barcelona", hint:"Park"}, 
+{word:"Madryt", hint:"Plaza"}, 
+{word:"Hawaje", hint:"Ukulele"}, 
+{word:"Islandia", hint:"Elf"}, 
+{word:"Alpy", hint:"Krowy"}, 
+{word:"Mount Everest", hint:"Tlen"}, 
+{word:"Niagara", hint:"Beczki"}, 
+{word:"Wielki Kanion", hint:"Osioł"}, 
+{word:"Antarktyda", hint:"Badacze"}, 
+{word:"Grenlandia", hint:"Wikingowie"}, 
+{word:"Malediwy", hint:"Bungalow"}, 
+{word:"Bali", hint:"Swing"}, 
+
+{word:"Avengers", hint:"Loki"}, 
+{word:"Iron Man", hint:"Pepper"}, 
+{word:"Thor", hint:"Lokiego"}, 
+{word:"Hulk", hint:"Betty"}, 
+{word:"Deadpool", hint:"Vanessa"}, 
+{word:"Joker", hint:"Harley"}, 
+{word:"Incepcja", hint:"Mal"}, 
+{word:"Interstellar", hint:"Murphy"}, 
+{word:"Gladiator", hint:"Commodus"}, 
+{word:"Piraci z Karaibów", hint:"Barbossa"}, 
+{word:"Szybcy i wściekli", hint:"Dom"}, 
+{word:"John Wick", hint:"Pies"}, 
+{word:"The Crown", hint:"Margaret"}, 
+{word:"Narcos", hint:"Wagner"}, 
+{word:"Dark", hint:"Clausen"}, 
+{word:"The Witcher", hint:"Yennefer"}, 
+{word:"Wednesday", hint:"Thing"}, 
+{word:"Peaky Blinders", hint:"Grace"}, 
+{word:"House of the Dragon", hint:"Daemon"}, 
+{word:"Black Mirror", hint:"WhiteBear"}, 
+
+{word:"Powerbank", hint:"Kabel"}, 
+{word:"Tablet", hint:"Stylus"}, 
+{word:"Drukarka", hint:"Papier"}, 
+{word:"Klawiatura", hint:"Backlight"}, 
+{word:"Myszka", hint:"RGB"}, 
+{word:"Monitor", hint:"Hz"}, 
+{word:"Router", hint:"Anteny"}, 
+{word:"Pilot", hint:"Baterie"}, 
+{word:"Głośnik", hint:"Bass"}, 
+{word:"Mikrofon", hint:"Popfilter"}, 
+{word:"Statyw", hint:"Korbka"}, 
+{word:"Termos", hint:"Nakrętka"}, 
+{word:"Bidon", hint:"Smak"}, 
+{word:"Scyzoryk", hint:"Nożyczki"}, 
+{word:"Kompas", hint:"Półkula"}, 
+{word:"Mapa", hint:"Fałdy"}, 
+{word:"Notes", hint:"Linie"}, 
+{word:"Długopis", hint:"Klip"}, 
+{word:"Kalkulator", hint:"Bateria"}, 
+{word:"Latte art", hint:"Dzbanek"}, 
+
+{word:"Tacos", hint:"Lime"}, 
+{word:"Burrito", hint:"Foil"}, 
+{word:"Ramen", hint:"Jajko"}, 
+{word:"Pad Thai", hint:"Orzechy"}, 
+{word:"Pierogi", hint:"Gotowanie"}, 
+{word:"Gołąbki", hint:"Liście"}, 
+{word:"Schabowy", hint:"Mięso"}, 
+{word:"Żurek", hint:"Jajko"}, 
+{word:"Barszcz", hint:"Uszka"}, 
+{word:"Kebab", hint:"Ogórek"}, 
+{word:"Falafel", hint:"Kula"}, 
+{word:"Hummus", hint:"Pita"}, 
+{word:"Guacamole", hint:"Chipsy"}, 
+{word:"Nachosy", hint:"Jalapeño"}, 
+{word:"Croissant", hint:"Francja"}, 
+{word:"Bagietka", hint:"Kiełbasa"}, 
+{word:"Pączki", hint:"Cukier"}, 
+{word:"Muffin", hint:"Kruszka"}, 
+{word:"Smoothie", hint:"Słomka"}, 
+{word:"Milkshake", hint:"Wiśnie"}, 
+
+{word:"Słoń", hint:"Kły"}, 
+{word:"Żyrafa", hint:"Plamy"}, 
+{word:"Kangur", hint:"Skok"}, 
+{word:"Koala", hint:"Drzewo"}, 
+{word:"Hipopotam", hint:"Słońce"}, 
+{word:"Nosorożec", hint:"Pancerz"}, 
+{word:"Gepard", hint:"Plamy"}, 
+{word:"Pantera", hint:"Drzewo"}, 
+{word:"Lis", hint:"Jaskinia"}, 
+{word:"Sowa", hint:"Sowa"}, 
+{word:"Jastrząb", hint:"Ofiara"}, 
+{word:"Kruk", hint:"Gniazdo"}, 
+{word:"Flaming", hint:"Stado"}, 
+{word:"Aligator", hint:"Jaja"}, 
+{word:"Kameleon", hint:"Język"}, 
+{word:"Ośmiornica", hint:"Tusz"}, 
+{word:"Meduza", hint:"Światło"}, 
+{word:"Konik morski", hint:"Samiec"}, 
+{word:"Foka", hint:"Słońce"}, 
+{word:"Mors", hint:"Broda"}, 
+
+{word:"Triathlon", hint:"Pływanie"}, 
+{word:"Crossfit", hint:"Kettlebell"}, 
+{word:"Kalistenika", hint:"Drążek"}, 
+{word:"Podnoszenie ciężarów", hint:"Przysiad"}, 
+{word:"Judo", hint:"Kimono"}, 
+{word:"Karate", hint:"Kata"}, 
+{word:"Taekwondo", hint:"Spin"}, 
+{word:"Wspinaczka", hint:"Haka"}, 
+{word:"Bouldering", hint:"Maty"}, 
+{word:"Hokej", hint:"Savior"}, 
+{word:"Łyżwiarstwo", hint:"Zimowe"}, 
+{word:"Snowboard", hint:"Halfpipe"}, 
+{word:"Skateboarding", hint:"Grind"}, 
+{word:"Parkour", hint:"Roll"}, 
+{word:"Strzelectwo", hint:"Tarcza"}, 
+{word:"Golf", hint:"Caddyshack"}, 
+{word:"Baseball", hint:"HomeRun"}, 
+{word:"Rugby", hint:"Try"}, 
+{word:"Badminton", hint:"Smash"}, 
+{word:"Tenis stołowy", hint:"Spin"}, 
+
+{word:"Motywacja", hint:"Kalender"}, 
+{word:"Determinacja", hint:"Grip"}, 
+{word:"Cierpliwość", hint:"Zegar"}, 
+{word:"Wdzięczność", hint:"Dziennik"}, 
+{word:"Zazdrość", hint:"Patrzenie"}, 
+{word:"Duma", hint:"Klatka"}, 
+{word:"Wstyd", hint:"Rumieniec"}, 
+{word:"Nostalgia", hint:"Fotografie"}, 
+{word:"Ekscytacja", hint:"Mrowienie"}, 
+{word:"Zaskoczenie", hint:"Usta"}, 
+{word:"Rozczarowanie", hint:"Wzdychanie"}, 
+{word:"Ulga", hint:"Odprężenie"}, 
+{word:"Samotność", hint:"Cisza"}, 
+{word:"Zaufanie", hint:"Uścisk"}, 
+{word:"Odwaga", hint:"Skok"}, 
+{word:"Kreatywność", hint:"Mózg"}, 
+{word:"Ambicja", hint:"Drabina"}, 
+{word:"Koncentracja", hint:"Laser"}, 
+{word:"Równowaga", hint:"Joga"}, 
+{word:"Wyobraźnia", hint:"Chmury"}, 
+
+{word:"Napoleon Bonaparte", hint:"Korsyka"}, 
+{word:"Cleopatra", hint:"Aspis"}, 
+{word:"Mahatma Gandhi", hint:"Sal"}, 
+{word:"Martin Luther King Jr.", hint:"Montgomery"}, 
+{word:"Nikola Tesla", hint:"Prąd"}, 
+{word:"Pablo Picasso", hint:"Byk"}, 
+{word:"Vincent van Gogh", hint:"Ucho"}, 
+{word:"William Shakespeare", hint:"Globe"}, 
+{word:"Charlie Chaplin", hint:"Tramp"}, 
+{word:"Usain Bolt", hint:"Jamaika"}, 
+{word:"Michael Jordan", hint:"Number23"}, 
+{word:"Serena Williams", hint:"Siostry"}, 
+{word:"Oprah Winfrey", hint:"BookClub"}, 
+{word:"Bill Gates", hint:"Droga"}, 
+{word:"Mark Zuckerberg", hint:"Harvard"}, 
+{word:"Jeff Bezos", hint:"Księgarnia"}, 
+{word:"Adele", hint:"Rozwód"}, 
+{word:"Drake", hint:"Views"}, 
+{word:"Beyoncé", hint:"Lemonade"}, 
+{word:"Ed Sheeran", hint:"Tatoo"}, 
+{word:"Franz Kafka", hint:"Pluskwa"}, 
+{word:"Homer Simpson", hint:"Duff"}, 
+{word:"Indiana Jones", hint:"Kapelusz"}, 
+{word:"Lara Croft", hint:"Dwuguziki"}, 
+{word:"Walter White", hint:"Ricin"}, 
+{word:"Tony Stark", hint:"JARVIS"}, 
+{word:"Darth Vader", hint:"Anakin"}, 
+{word:"Gandalf", hint:"Balrog"}, 
+{word:"Jon Snow", hint:"Ghost"}, 
+{word:"Geralt z Rivii", hint:"Medalion"}, 
+{word:"Król Artur", hint:"Merlin"}, 
+{word:"Leonardo DiCaprio", hint:"LeoMeme"}, 
+{word:"Brad Pitt", hint:"Achilles"}, 
+{word:"Angelina Jolie", hint:"Igła"}, 
+{word:"Keira Knightley", hint:"Piraci"}, 
+{word:"Daniel Radcliffe", hint:"Equus"}, 
+{word:"Emma Stone", hint:"SpiderSense"}, 
+{word:"Tom Cruise", hint:"Scientology"}, 
+{word:"Robert De Niro", hint:"Raging"}, 
+{word:"Al Pacino", hint:"SayHello"}, 
+{word:"Galileo Galilei", hint:"Piza"}, 
+{word:"Isaac Newton", hint:"Alchemia"}, 
+{word:"Charles Darwin", hint:"Finches"}, 
+{word:"Sigmund Freud", hint:"Cygara"}, 
+{word:"Wolfgang Amadeus Mozart", hint:"Salzburg"}, 
+{word:"Ludwig van Beethoven", hint:"Głuchota"}, 
+{word:"Elvis Presley", hint:"Graceland"}, 
+{word:"Madonna", hint:"Kabbalah"}, 
+{word:"Kurt Cobain", hint:"Shotgun"}, 
+{word:"Bob Marley", hint:"Trenchtown"}, 
+
+{word:"Atlantyda", hint:"Platon"}, 
+{word:"Watykan", hint:"Gwardia"}, 
+{word:"Hollywood", hint:"Oscary"}, 
+{word:"Manhattan", hint:"Subway"}, 
+{word:"Transylwania", hint:"Hrabia"}, 
+{word:"Himalaje", hint:"Yetii"}, 
+{word:"Amazonka", hint:"Piranie"}, 
+{word:"Sycylia", hint:"Cannoli"}, 
+{word:"Alaska", hint:"Złoto"}, 
+{word:"Czarnobyl", hint:"Turystyka"}, 
+{word:"Stonehenge", hint:"Druidzi"}, 
+{word:"Wersal", hint:"Madame"}, 
+{word:"Pompeje", hint:"Wino"}, 
+{word:"Giza", hint:"Khufu"}, 
+{word:"Everest", hint:"Mallory"}, 
+{word:"Fukushima", hint:"Sakura"}, 
+{word:"Wall Street", hint:"Bull"}, 
+{word:"Kilimandżaro", hint:"Hemingway"}, 
+{word:"Serengeti", hint:"WielkaMigracja"}, 
+{word:"Andes", hint:"Mumia"}, 
+{word:"Toskania", hint:"Oliwa"}, 
+{word:"Sahara", hint:"Wielbłąd"}, 
+{word:"Patagonia", hint:"Pengwiny"}, 
+{word:"Babilon", hint:"Nabuchodonozor"}, 
+{word:"Sparta", hint:"Leonidas"}, 
+{word:"Troja", hint:"Helena"}, 
+{word:"Korsyka", hint:"Napoleon"}, 
+{word:"Ibiza", hint:"Sunset"}, 
+{word:"Himalaje", hint:"Medytacja"}, 
+{word:"Malta", hint:"Megality"}, 
+{word:"Wenecja", hint:"Karnawał"}, 
+{word:"Chicago", hint:"Blues"}, 
+{word:"Nowy Orlean", hint:"Voodoo"}, 
+{word:"Seattle", hint:"Kawa"}, 
+{word:"Miami", hint:"Neony"}, 
+{word:"Bangkok", hint:"Rzeka"}, 
+{word:"Delhi", hint:"Rickshaws"}, 
+{word:"Prypeć", hint:"Lunapark"}, 
+{word:"Monte Carlo", hint:"Yachty"}, 
+{word:"Antarktyda", hint:"Pingwiny"}, 
+{word:"Grenlandia", hint:"Lodowiec"}, 
+{word:"Sztokholm", hint:"Archipelag"}, 
+{word:"Helsinki", hint:"Design"}, 
+{word:"Oslo", hint:"Fiordy"}, 
+{word:"Reykjavik", hint:"Elficki"}, 
+{word:"Marrakesz", hint:"Węże"}, 
+{word:"Dubaj", hint:"Złoto"}, 
+{word:"Sydney", hint:"Kangur"}, 
+{word:"Rio de Janeiro", hint:"Fawela"}, 
+{word:"Wolność", hint:"Orzeł"},
+{word:"Gladiator", hint:"Maximus"}, 
+{word:"Incepcja", hint:"Limbo"}, 
+{word:"Interstellar", hint:"Miller"}, 
+{word:"Matrix", hint:"Czerwona"}, 
+{word:"Titanic", hint:"Diament"}, 
+{word:"Avatar", hint:"Naavi"}, 
+{word:"Joker", hint:"Anarchia"}, 
+{word:"Parasite", hint:"Schody"}, 
+{word:"Shrek", hint:"Oślica"}, 
+{word:"Król Lew", hint:"Timon"}, 
+{word:"Frozen", hint:"Olaf"}, 
+{word:"Avengers", hint:"Snap"}, 
+{word:"Batman", hint:"Alfred"}, 
+{word:"Spider-Man", hint:"MJ"}, 
+{word:"Deadpool", hint:"Cable"}, 
+{word:"Harry Potter", hint:"Dursley"}, 
+{word:"Władca Pierścieni", hint:"Boromir"}, 
+{word:"Star Wars", hint:"HanSolo"}, 
+{word:"Jurassic Park", hint:"Nedry"}, 
+{word:"The Godfather", hint:"Michael"}, 
+{word:"Fight Club", hint:"Tyler"}, 
+{word:"Pulp Fiction", hint:"Marsellus"}, 
+{word:"Forrest Gump", hint:"Jenny"}, 
+{word:"Top Gun", hint:"Goose"}, 
+{word:"La La Land", hint:"Planetarium"}, 
+{word:"Czarna Pantera", hint:"Okoye"}, 
+{word:"Thor", hint:"Loki"}, 
+{word:"Iron Man", hint:"Happy"}, 
+{word:"Minionki", hint:"Vector"}, 
+{word:"Piraci z Karaibów", hint:"Bootstrap"}, 
+{word:"John Wick", hint:"Winston"}, 
+{word:"Mission Impossible", hint:"Ethan"}, 
+{word:"James Bond", hint:"Moneypenny"}, 
+{word:"Rocky", hint:"Mickey"}, 
+{word:"Rambo", hint:"Mur"}, 
+{word:"Terminator", hint:"Sarah"}, 
+{word:"Predator", hint:"Mud"}, 
+{word:"Obcy", hint:"Ripley"}, 
+{word:"The Social Network", hint:"Winklevoss"}, 
+{word:"Wilk z Wall Street", hint:"Donnie"}, 
+{word:"Breaking Bad", hint:"Saul"}, 
+{word:"Dark", hint:"Jaskinia"}, 
+{word:"Stranger Things", hint:"Eleven"}, 
+{word:"The Office", hint:"Jim"}, 
+{word:"Peaky Blinders", hint:"Polly"}, 
+{word:"Narcos", hint:"Murphy"}, 
+{word:"The Crown", hint:"Philip"}, 
+{word:"Wednesday", hint:"Enid"}, 
+{word:"House of the Dragon", hint:"Aegon"}, 
+{word:"Black Mirror", hint:"WhiteBear"}, 
 
 /* PRZEDMIOTY */
-{word:"Smartfon", hint:"Aplikacje"},
-{word:"Laptop", hint:"Mobilność"},
-{word:"Zegarek", hint:"Sekundy"},
-{word:"Kompas", hint:"Północ"},
-{word:"Mapa", hint:"Trasa"},
-{word:"Latarka", hint:"Mrok"},
-{word:"Parasol", hint:"Deszcz"},
-{word:"Okulary", hint:"Ostrość"},
-{word:"Słuchawki", hint:"Dźwięk"},
-{word:"Powerbank", hint:"Procent"},
-{word:"Drukarka", hint:"Tusz"},
-{word:"Kalkulator", hint:"Równanie"},
-{word:"Mikrofon", hint:"Echo"},
-{word:"Głośnik", hint:"Bas"},
-{word:"Kamera", hint:"Kadr"},
-{word:"Dron", hint:"Powietrze"},
-{word:"Router", hint:"WiFi"},
-{word:"Pilot", hint:"Kanał"},
-{word:"Statyw", hint:"Stabilność"},
-{word:"Termos", hint:"Temperatura"},
-{word:"Scyzoryk", hint:"Funkcje"},
-{word:"Młotek", hint:"Remont"},
-{word:"Wiertarka", hint:"Hałas"},
-{word:"Śrubokręt", hint:"Naprawa"},
-{word:"Lodówka", hint:"Świeżość"},
-{word:"Mikrofala", hint:"Minuty"},
-{word:"Toster", hint:"Śniadanie"},
-{word:"Odkurzacz", hint:"Kurz"},
-{word:"Żelazko", hint:"Para"},
-{word:"Klucz", hint:"Zamek"},
-{word:"Portfel", hint:"Gotówka"},
-{word:"Walizka", hint:"Lotnisko"},
-{word:"Plecak", hint:"Wędrówka"},
-{word:"Latte", hint:"Kawiarnia"},
-{word:"Książka", hint:"Fabuła"},
-{word:"Notes", hint:"Pomysł"},
-{word:"Długopis", hint:"Podpis"},
-{word:"Zapalniczka", hint:"Iskra"},
-{word:"Świeca", hint:"Płomień"},
-{word:"Lornetka", hint:"Horyzont"},
-{word:"Kajdanki", hint:"Policja"},
-{word:"Maska", hint:"Anonimowość"},
-{word:"Tarcza", hint:"Obrona"},
-{word:"Miecz", hint:"Pojedynek"},
-{word:"Korona", hint:"Władza"},
-{word:"Berło", hint:"Monarcha"},
-{word:"Teleskop", hint:"Kosmos"},
-{word:"Gitara", hint:"Akord"},
-{word:"Fortepian", hint:"Klasyka"},
-{word:"Perfumy", hint:"Zapach"},
+{word:"Smartfon", hint:"Pęknięcie"}, 
+{word:"Laptop", hint:"Wentylator"}, 
+{word:"Zegarek", hint:"Bateria"}, 
+{word:"Kompas", hint:"Igła"}, 
+{word:"Mapa", hint:"Fałdy"}, 
+{word:"Latarka", hint:"Światło"}, 
+{word:"Parasol", hint:"Wiatr"}, 
+{word:"Okulary", hint:"Śruby"}, 
+{word:"Słuchawki", hint:"Przewód"}, 
+{word:"Powerbank", hint:"Kabel"}, 
+{word:"Drukarka", hint:"Zatkany"}, 
+{word:"Kalkulator", hint:"Bateria"}, 
+{word:"Mikrofon", hint:"Popfilter"}, 
+{word:"Głośnik", hint:"Bass"}, 
+{word:"Kamera", hint:"Selfie"}, 
+{word:"Dron", hint:"Bateria"}, 
+{word:"Router", hint:"Anteny"}, 
+{word:"Pilot", hint:"Baterie"}, 
+{word:"Statyw", hint:"Korbka"}, 
+{word:"Termos", hint:"Nakrętka"}, 
+{word:"Scyzoryk", hint:"Nożyczki"}, 
+{word:"Młotek", hint:"Gwoździe"}, 
+{word:"Wiertarka", hint:"Wióry"}, 
+{word:"Śrubokręt", hint:"Bit"}, 
+{word:"Lodówka", hint:"Szron"}, 
+{word:"Mikrofala", hint:"Turntable"}, 
+{word:"Toster", hint:"Spalony"}, 
+{word:"Odkurzacz", hint:"Worek"}, 
+{word:"Żelazko", hint:"Deska"}, 
+{word:"Klucz", hint:"Zardzewiały"}, 
+{word:"Portfel", hint:"NFC"}, 
+{word:"Walizka", hint:"Etykieta"}, 
+{word:"Plecak", hint:"Zamek"}, 
+{word:"Latte", hint:"Dzbanek"}, 
+{word:"Książka", hint:"Zakładka"}, 
+{word:"Notes", hint:"Karteczki"}, 
+{word:"Długopis", hint:"Klip"}, 
+{word:"Zapalniczka", hint:"Zippo"}, 
+{word:"Świeca", hint:"Knit"}, 
+{word:"Lornetka", hint:"Powiększenie"}, 
+{word:"Kajdanki", hint:"Kluczki"}, 
+{word:"Maska", hint:"Respirator"}, 
+{word:"Tarcza", hint:"Balistyczna"}, 
+{word:"Miecz", hint:"pochwa"}, 
+{word:"Korona", hint:"Diadem"}, 
+{word:"Berło", hint:"Szkielet"}, 
+{word:"Teleskop", hint:"Okular"}, 
+{word:"Gitara", hint:"Paznokcie"}, 
+{word:"Fortepian", hint:"Pedal"}, 
+{word:"Perfumy", hint:"Atomizer"}, 
 
 /* POJĘCIA */
-{word:"Miłość", hint:"Relacja"},
-{word:"Strach", hint:"Cień"},
-{word:"Sukces", hint:"Szczyt"},
-{word:"Porażka", hint:"Upadek"},
-{word:"Marzenie", hint:"Cel"},
-{word:"Chaos", hint:"Bałagan"},
-{word:"Spokój", hint:"Cisza"},
-{word:"Ryzyko", hint:"Hazard"},
-{word:"Motywacja", hint:"Impuls"},
-{word:"Determinacja", hint:"Upór"},
-{word:"Cierpliwość", hint:"Czas"},
-{word:"Wdzięczność", hint:"Docenienie"},
-{word:"Zazdrość", hint:"Porównanie"},
-{word:"Duma", hint:"Honor"},
-{word:"Wstyd", hint:"Rumieniec"},
-{word:"Nostalgia", hint:"Przeszłość"},
-{word:"Ekscytacja", hint:"Oczekiwanie"},
-{word:"Zaskoczenie", hint:"Szok"},
-{word:"Rozczarowanie", hint:"Zawód"},
-{word:"Ulga", hint:"Oddech"},
-{word:"Samotność", hint:"Pustka"},
-{word:"Zaufanie", hint:"Wiara"},
-{word:"Odwaga", hint:"Śmiałość"},
-{word:"Kreatywność", hint:"Twórczość"},
-{word:"Ambicja", hint:"Szczyt"},
-{word:"Koncentracja", hint:"Fokus"},
-{word:"Równowaga", hint:"Balans"},
-{word:"Wyobraźnia", hint:"Fantazja"},
-{word:"Empatia", hint:"Współczucie"},
-{word:"Charyzma", hint:"Magnetyzm"},
-{word:"Intuicja", hint:"Przeczucie"},
-{word:"Lojalność", hint:"Wierność"},
-{word:"Honor", hint:"Zasady"},
-{word:"Manipulacja", hint:"Wpływ"},
-{word:"Iluzja", hint:"Złudzenie"},
-{word:"Inspiracja", hint:"Muza"},
-{word:"Presja", hint:"Oczekiwania"},
-{word:"Rutyna", hint:"Schemat"},
-{word:"Adrenalina", hint:"Impuls"},
-{word:"Pasja", hint:"Ogień"},
-{word:"Obsesja", hint:"Nadmierność"},
-{word:"Satysfakcja", hint:"Spełnienie"},
-{word:"Melancholia", hint:"Zaduma"},
-{word:"Euforia", hint:"Uniesienie"},
-{word:"Ironia", hint:"Przekora"},
-{word:"Paradoks", hint:"Sprzeczność"},
-{word:"Autorytet", hint:"Szacunek"},
-{word:"Tożsamość", hint:"Ja"},
-{word:"Wolność", hint:"Niezależność"} ];
+{word:"Miłość", hint:"Motyle"}, 
+{word:"Strach", hint:"Dreszcze"}, 
+{word:"Sukces", hint:"Konfetti"}, 
+{word:"Porażka", hint:"Pudło"}, 
+{word:"Marzenie", hint:"Sennik"}, 
+{word:"Chaos", hint:"Tornado"}, 
+{word:"Spokój", hint:"Chmura"}, 
+{word:"Ryzyko", hint:"Kości"}, 
+{word:"Motywacja", hint:"Kalender"}, 
+{word:"Determinacja", hint:"Grip"}, 
+{word:"Cierpliwość", hint:"Zegar"}, 
+{word:"Wdzięczność", hint:"Dziennik"}, 
+{word:"Zazdrość", hint:"Patrzenie"}, 
+{word:"Duma", hint:"Klatka"}, 
+{word:"Wstyd", hint:"Rumieniec"}, 
+{word:"Nostalgia", hint:"Fotografie"}, 
+{word:"Ekscytacja", hint:"Mrowienie"}, 
+{word:"Zaskoczenie", hint:"Usta"}, 
+{word:"Rozczarowanie", hint:"Wzdychanie"}, 
+{word:"Ulga", hint:"Odprężenie"}, 
+{word:"Samotność", hint:"Cisza"}, 
+{word:"Zaufanie", hint:"Uścisk"}, 
+{word:"Odwaga", hint:"Skok"}, 
+{word:"Kreatywność", hint:"Mózg"}, 
+{word:"Ambicja", hint:"Drabina"}, 
+{word:"Koncentracja", hint:"Laser"}, 
+{word:"Równowaga", hint:"Joga"}, 
+{word:"Wyobraźnia", hint:"Chmury"}, 
+{word:"Empatia", hint:"Współczucie"}, 
+{word:"Charyzma", hint:"Uśmiech"}, 
+{word:"Intuicja", hint:"Przeczucie"}, 
+{word:"Lojalność", hint:"Pies"}, 
+{word:"Honor", hint:"Słowo"}, 
+{word:"Manipulacja", hint:"Lalki"}, 
+{word:"Iluzja", hint:"Lusterko"}, 
+{word:"Inspiracja", hint:"Żarówka"}, 
+{word:"Presja", hint:"Waga"}, 
+{word:"Rutyna", hint:"Budzik"}, 
+{word:"Adrenalina", hint:"Spadochron"}, 
+{word:"Pasja", hint:"Płomień"}, 
+{word:"Obsesja", hint:"Łańcuch"}, 
+{word:"Satysfakcja", hint:"Uśmiech"}, 
+{word:"Melancholia", hint:"Deszcz"}, 
+{word:"Euforia", hint:"Taniec"}, 
+{word:"Ironia", hint:"Przekora"}, 
+{word:"Paradoks", hint:"Schroedinger"}, 
+{word:"Autorytet", hint:"Berło"}, 
+{word:"Tożsamość", hint:"Lustro"}, 
+{word:"Wolność", hint:"Orzeł"},
+{word:"Albert Camus", hint:"Absurd"},
+{word:"Platon", hint:"Jaskinia"},
+{word:"Sokrates", hint:"Cykuta"},
+{word:"Arystoteles", hint:"Liceum"},
+{word:"Fryderyk Chopin", hint:"Etiuda"},
+{word:"Adam Mickiewicz", hint:"Improwizacja"},
+{word:"Juliusz Słowacki", hint:"Geneza"},
+{word:"Henryk Sienkiewicz", hint:"Latarnik"},
+{word:"Maria Skłodowska-Curie", hint:"Probówka"},
+{word:"Stanisław Lem", hint:"Pilot"},
+{word:"George Orwell", hint:"Folwark"},
+{word:"Ernest Hemingway", hint:"Hawana"},
+{word:"Fiodor Dostojewski", hint:"Raskolnikow"},
+{word:"Lew Tołstoj", hint:"Anna"},
+{word:"Mark Twain", hint:"Missisipi"},
+{word:"Agatha Christie", hint:"Orient"},
+{word:"Dan Brown", hint:"Symbologia"},
+{word:"Umberto Eco", hint:"Biblioteka"},
+{word:"J.R.R. Tolkien", hint:"Silmaril"},
+{word:"C.S. Lewis", hint:"Szafa"},
+
+{word:"Reykjavik", hint:"Gejzer"},
+{word:"Kair", hint:"Papirus"},
+{word:"Hanoi", hint:"Skuter"},
+{word:"Seul", hint:"Hanbok"},
+{word:"Toronto", hint:"Liść"},
+{word:"Buenos Aires", hint:"Tango"},
+{word:"Lizbona", hint:"Tram28"},
+{word:"Edynburg", hint:"Fringe"},
+{word:"Glasgow", hint:"Clyde"},
+{word:"Monachium", hint:"Oktober"},
+
+{word:"Photoshop", hint:"Warstwy"},
+{word:"Excel", hint:"Formuła"},
+{word:"PowerPoint", hint:"Slajd"},
+{word:"Word", hint:"Margines"},
+{word:"Linux", hint:"Pingwin"},
+{word:"Windows", hint:"Start"},
+{word:"MacBook", hint:"Jabłko"},
+{word:"Android", hint:"Robot"},
+{word:"iPhone", hint:"Notch"},
+{word:"PlayStation", hint:"Trójkąt"},
+
+{word:"Cappuccino", hint:"Kakao"},
+{word:"Espresso", hint:"25ml"},
+{word:"Matcha", hint:"Bambus"},
+{word:"Kimchi", hint:"Ferment"},
+{word:"Bibimbap", hint:"Misa"},
+{word:"Pho", hint:"Bulion"},
+{word:"Ceviche", hint:"Limeta"},
+{word:"Risotto", hint:"Arborio"},
+{word:"Tapas", hint:"Małe"},
+{word:"Gnocchi", hint:"Widelec"},
+
+{word:"Kameleon", hint:"Chromatofor"},
+{word:"Axolotl", hint:"Regeneracja"},
+{word:"Kapibara", hint:"Relaks"},
+{word:"Surikatka", hint:"Strażnik"},
+{word:"Puchacz", hint:"Syczek"},
+{word:"Koliber", hint:"Zawis"},
+{word:"Mrówkojad", hint:"Termity"},
+{word:"Narwal", hint:"Róg"},
+{word:"Tarantula", hint:"Włoski"},
+{word:"Skorpion", hint:"Żądło"},
+
+{word:"Szermierka", hint:"Plansza"},
+{word:"Biathlon", hint:"Karabin"},
+{word:"Snooker", hint:"Czerwona"},
+{word:"Curling", hint:"Szczotka"},
+{word:"Sumo", hint:"Dohyo"},
+{word:"Kitesurfing", hint:"Latawiec"},
+{word:"Wakeboarding", hint:"Wyciąg"},
+{word:"Esport", hint:"LAN"},
+{word:"Szachy błyskawiczne", hint:"Bullet"},
+{word:"Pentathlon", hint:"Pięciobój"},
+
+{word:"Algorytm", hint:"Kroki"},
+{word:"Paradigma", hint:"Zmiana"},
+{word:"Hipoteza", hint:"Test"},
+{word:"Teoria", hint:"Model"},
+{word:"Grawitacja", hint:"Krzywizna"},
+{word:"Relatywność", hint:"Czasoprzestrzeń"},
+{word:"Ewolucja", hint:"Dobór"},
+{word:"Inflacja", hint:"Koszyk"},
+{word:"Recesja", hint:"Minus"},
+{word:"Globalizacja", hint:"Kontener"},
+
+{word:"Thor", hint:"Mjolnir"},
+{word:"Loki", hint:"Psikus"},
+{word:"Hades", hint:"Podziemie"},
+{word:"Zeus", hint:"Piorun"},
+{word:"Atena", hint:"Sowa"},
+{word:"Posejdon", hint:"Trójząb"},
+{word:"Ozyrys", hint:"Nil"},
+{word:"Ra", hint:"Słońce"},
+{word:"Feniks", hint:"Popiół"},
+{word:"Pegaz", hint:"Skrzydła"},
+
+{word:"GitHub", hint:"Commit"},
+{word:"Stack Overflow", hint:"Błąd"},
+{word:"Docker", hint:"Kontener"},
+{word:"Kubernetes", hint:"Klaster"},
+{word:"Blockchain", hint:"Łańcuch"},
+{word:"Bitcoin", hint:"Halving"},
+{word:"Ethereum", hint:"Gas"},
+{word:"ChatGPT", hint:"Prompt"},
+{word:"Midjourney", hint:"Render"},
+{word:"Canva", hint:"Szablon"},
+
+{word:"Origami", hint:"Żuraw"},
+{word:"Kaligrafia", hint:"Tusz"},
+{word:"Ceramika", hint:"Koło"},
+{word:"Rzeźba", hint:"Dłuto"},
+{word:"Akwarela", hint:"Woda"},
+{word:"Graffiti", hint:"Mur"},
+{word:"Tatuaż", hint:"Igła"},
+{word:"Balet", hint:"Pointy"},
+{word:"Opera", hint:"Aria"},
+{word:"Jazz", hint:"Improwizacja"},
+
+{word:"Labirynt", hint:"Nić"},
+{word:"Kometa", hint:"Warkocz"},
+{word:"Asteroida", hint:"Pas"},
+{word:"Czarna dziura", hint:"Horyzont"},
+{word:"Supernowa", hint:"Eksplozja"},
+{word:"Galaktyka", hint:"Spirala"},
+{word:"Księżyc", hint:"Fazy"},
+{word:"Mars", hint:"Łazik"},
+{word:"Wenus", hint:"Chmury"},
+{word:"Saturn", hint:"Pierścienie"},
+
+{word:"Detektyw", hint:"Lupa"},
+{word:"Szpieg", hint:"Mikrofilm"},
+{word:"Archeolog", hint:"Pędzelek"},
+{word:"Astronauta", hint:"Skafander"},
+{word:"Strażak", hint:"Hydrant"},
+{word:"Ratownik", hint:"Defibrylator"},
+{word:"Barista", hint:"Tamper"},
+{word:"Sommelier", hint:"Aromat"},
+{word:"Kowboj", hint:"Lasso"},
+{word:"Samuraj", hint:"Katana"},
+
+{word:"Minimalizm", hint:"Mniej"},
+{word:"Barok", hint:"Przepych"},
+{word:"Renesans", hint:"Humanizm"},
+{word:"Gotyk", hint:"Witraż"},
+{word:"Impresjonizm", hint:"Światło"},
+{word:"Surrealizm", hint:"Sen"},
+{word:"Realizm", hint:"Codzienność"},
+{word:"Romantyzm", hint:"Burza"},
+{word:"Modernizm", hint:"Manifest"},
+{word:"Postmodernizm", hint:"Cytat"},
+
+{word:"DNA", hint:"Helisa"},
+{word:"Neuron", hint:"Synapsa"},
+{word:"Hormon", hint:"Kortyzol"},
+{word:"Adrenalina", hint:"Walcz"},
+{word:"Serotonina", hint:"Nastrój"},
+{word:"Dopamina", hint:"Nagroda"},
+{word:"Insulina", hint:"Glukoza"},
+{word:"Antybiotyk", hint:"Penicylina"},
+{word:"Wirus", hint:"Mutacja"},
+{word:"Bakteria", hint:"Kolonia"},
+
+{word:"Sztorm", hint:"Fale"},
+{word:"Tornado", hint:"Lej"},
+{word:"Trzęsienie ziemi", hint:"Richter"},
+{word:"Wulkan", hint:"Lawa"},
+{word:"Lawina", hint:"Śnieg"},
+{word:"Susza", hint:"Pęknięcia"},
+{word:"Powódź", hint:"Wał"},
+{word:"Mgła", hint:"Widoczność"},
+{word:"Tęcza", hint:"Spektrum"},
+{word:"Zaćmienie", hint:"Cień"}
+];
+
 
 // UI helpers
 function show(id){
     document.querySelectorAll(".container > div").forEach(d=>d.classList.add("hidden"));
     document.getElementById(id).classList.remove("hidden");
+
+    // Cofnij widoczne wszędzie poza menu i grą
+    const backBtn = document.getElementById("backBtn");
+    if(id === "menu" || id === "game"){
+        backBtn.classList.add("hidden");
+    } else {
+        backBtn.classList.remove("hidden");
+    }
+}
+
+function goBack(){
+    show("menu");
 }
 
 // MENU
@@ -651,12 +1073,44 @@ function enterLobby(){
     document.getElementById("lobbyCode").innerText = lobbyId;
 
     db.ref("lobbies/"+lobbyId+"/players").on("value", snap=>{
-        let html="";
-        snap.forEach(p=>{
-            html += p.val().name + "<br>";
-        });
-        document.getElementById("players").innerHTML = html;
+    const container = document.getElementById("players");
+    container.innerHTML = "";
+
+    const hostId = snap.ref.parent.parent.child("host");
+
+    snap.forEach(p=>{
+        const data = p.val();
+        const id = p.key;
+
+        const card = document.createElement("div");
+        card.className = "player-card";
+
+        const initial = data.name.charAt(0).toUpperCase();
+
+        card.innerHTML = `
+            <div class="player-left">
+                <div class="avatar">${initial}</div>
+                <div class="player-info">
+                    <div class="player-name">${data.name}</div>
+                    <div class="player-status">Online</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
     });
+
+    // oznacz hosta
+    db.ref("lobbies/"+lobbyId+"/host").once("value", hostSnap=>{
+        const hostId = hostSnap.val();
+        document.querySelectorAll(".player-card").forEach((card,index)=>{
+            const playerKey = Object.keys(snap.val())[index];
+            if(playerKey === hostId){
+                card.innerHTML += `<div class="host-badge">👑</div>`;
+            }
+        });
+    });
+});
 
  db.ref("lobbies/"+lobbyId).on("value", snap=>{
     let data = snap.val();
@@ -718,21 +1172,34 @@ function newRound(){
 function startGameView(data){
     show("game");
 
-    let wordBox = document.getElementById("word");
+    const revealCard = document.getElementById("revealCard");
+    const wordBox = document.getElementById("word");
+    const roleLabel = document.getElementById("roleLabel");
+
+    revealCard.classList.remove("impostor");
+    revealCard.classList.remove("show");
 
     if(playerId === data.impostor){
-        wordBox.classList.add("impostor");
+
+        revealCard.classList.add("impostor");
+        roleLabel.innerText = "🕵️ IMPOSTOR";
 
         if(data.mode === "hint" && data.hint){
-            wordBox.innerText = "IMPOSTOR\nPodpowiedź: " + data.hint;
-        }else{
-            wordBox.innerText = "IMPOSTOR";
+            wordBox.innerText = "Podpowiedź: " + data.hint;
+        } else {
+            wordBox.innerText = "Nie znasz hasła...";
         }
 
-    }else{
-        wordBox.classList.remove("impostor");
+    } else {
+
+        roleLabel.innerText = "🎯 TWOJE HASŁO";
         wordBox.innerText = data.word;
+
     }
+
+    // restart animacji
+    void revealCard.offsetWidth;
+    revealCard.classList.add("show");
 
     document.getElementById("newRoundBtn").style.display = isHost ? "block" : "none";
 }
