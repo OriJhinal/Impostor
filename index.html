@@ -213,6 +213,49 @@ input {
     margin-left: 8px;
 }
 
+.kick-btn {
+    width: auto;
+    padding: 6px 10px;
+    margin-left: 10px;
+    background: linear-gradient(145deg, #e74c3c, #c0392b);
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.kick-btn:hover {
+    transform: scale(1.1);
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: linear-gradient(145deg, #1f2433, #161a25);
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+    text-align: center;
+    width: 280px;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal-buttons {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal.hidden {
+    display: none;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
@@ -270,6 +313,19 @@ input {
         <button id="newRoundBtn" onclick="newRound()">Nowa runda</button>
         <button onclick="leaveGame()">Opuść</button>
     </div>
+    <button id="backToLobbyBtn" onclick="backToLobby()" style="display:none;">
+    ⬅ Wróć do lobby
+</button>
+
+<div id="kickModal" class="modal hidden">
+    <div class="modal-content">
+        <p id="kickText"></p>
+        <div class="modal-buttons">
+            <button onclick="executeKick()">Tak</button>
+            <button onclick="closeKickModal()">Anuluj</button>
+        </div>
+    </div>
+</div>
 
 </div>
 
@@ -1079,26 +1135,44 @@ function enterLobby(){
     const hostId = snap.ref.parent.parent.child("host");
 
     snap.forEach(p=>{
-        const data = p.val();
-        const id = p.key;
+    const data = p.val();
+    const id = p.key;
 
-        const card = document.createElement("div");
-        card.className = "player-card";
+    const card = document.createElement("div");
+    card.className = "player-card";
 
-        const initial = data.name.charAt(0).toUpperCase();
+    const initial = data.name.charAt(0).toUpperCase();
 
-        card.innerHTML = `
-            <div class="player-left">
-                <div class="avatar">${initial}</div>
-                <div class="player-info">
-                    <div class="player-name">${data.name}</div>
-                    <div class="player-status">Online</div>
-                </div>
+    card.innerHTML = `
+        <div class="player-left">
+            <div class="avatar">${initial}</div>
+            <div class="player-info">
+                <div class="player-name">${data.name}</div>
+                <div class="player-status">Online</div>
             </div>
-        `;
+        </div>
+    `;
 
-        container.appendChild(card);
-    });
+    
+
+    // ❌ Kick button tylko dla hosta i nie dla siebie
+    if(isHost && id !== playerId){
+        const kickBtn = document.createElement("button");
+        kickBtn.className = "kick-btn";
+        kickBtn.innerText = "✖";
+        kickBtn.onclick = () => confirmKick(id, data.name);
+        card.appendChild(kickBtn);
+    }
+
+    container.appendChild(card);
+
+    db.ref("lobbies/"+lobbyId+"/players/"+playerId).on("value", snap=>{
+    if(!snap.exists()){
+        alert("Zostałeś wyrzucony z lobby.");
+        location.reload();
+    }
+});
+});
 
     // oznacz hosta
     db.ref("lobbies/"+lobbyId+"/host").once("value", hostSnap=>{
@@ -1128,6 +1202,17 @@ function enterLobby(){
 function startGame(){
     if(!isHost) return;
     newRound();
+}
+
+function backToLobby(){
+    if(!isHost) return;
+
+    db.ref("lobbies/"+lobbyId).update({
+        state: "lobby",
+        word: null,
+        hint: null,
+        impostor: null
+    });
 }
 
 function newRound(){
@@ -1202,6 +1287,8 @@ function startGameView(data){
     revealCard.classList.add("show");
 
     document.getElementById("newRoundBtn").style.display = isHost ? "block" : "none";
+
+    document.getElementById("backToLobbyBtn").style.display = isHost ? "block" : "none";
 }
 
 // LEAVE
@@ -1210,6 +1297,26 @@ function leaveGame(){
         db.ref("lobbies/"+lobbyId+"/players/"+playerId).remove();
     }
     location.reload();
+}
+
+function confirmKick(id, name){
+    playerToKick = id;
+    document.getElementById("kickText").innerText =
+        "Czy na pewno chcesz wyrzucić gracza: " + name + "?";
+    document.getElementById("kickModal").classList.remove("hidden");
+}
+
+function closeKickModal(){
+    playerToKick = null;
+    document.getElementById("kickModal").classList.add("hidden");
+}
+
+function executeKick(){
+    if(!playerToKick) return;
+
+    db.ref("lobbies/"+lobbyId+"/players/"+playerToKick).remove();
+
+    closeKickModal();
 }
 </script>
 
